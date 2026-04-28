@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+@import 'bootstrap/dist/css/bootstrap.min.css';
+
+/* Prevent text selection across the entire application */
+*,
+*::before,
+*::after {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Allow selection only inside code-server iframes (editor) */
+iframe {
+  -webkit-user-select: auto;
+  -moz-user-select: auto;
+  -ms-user-select: auto;
+  user-select: auto;
+}
+
+.font-montserrat {
+    font-family: 'Montserrat', sans-serif;
+  }
+  
+  .font-firacode {
+    font-family: 'Fira Code', monospace;
+  }
+  
