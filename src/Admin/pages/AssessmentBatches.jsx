@@ -38,7 +38,12 @@ function AssessmentBatches() {
 
   // Create form
   const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({ batch_name: "", client_id: "", estimated_users: "" });
+  const [form, setForm] = useState({
+    batch_name: "",
+    client_id: "",
+    estimated_users: "",
+    containers_per_server: "3",
+  });
   const [saving, setSaving] = useState(false);
   const [formError, setFormError] = useState(null);
 
@@ -48,6 +53,13 @@ function AssessmentBatches() {
 
   // Deprovisioning state
   const [deprovisioning, setDeprovisioning] = useState({});
+
+  const estimatedUsers = Number(form.estimated_users);
+  const containersPerServer = Number(form.containers_per_server);
+  const requiredServers =
+    estimatedUsers > 0 && containersPerServer > 0
+      ? Math.ceil(estimatedUsers / containersPerServer)
+      : 0;
 
   const fetchBatches = async () => {
     try {
@@ -107,12 +119,16 @@ function AssessmentBatches() {
 
   const handleCreateBatch = async () => {
     setFormError(null);
-    if (!form.batch_name.trim() || !form.client_id || !form.estimated_users) {
+    if (!form.batch_name.trim() || !form.client_id || !form.estimated_users || !form.containers_per_server) {
       setFormError("All fields are required.");
       return;
     }
     if (Number(form.estimated_users) < 1) {
       setFormError("Estimated users must be at least 1.");
+      return;
+    }
+    if (Number(form.containers_per_server) < 1) {
+      setFormError("Containers per server must be at least 1.");
       return;
     }
     setSaving(true);
@@ -121,9 +137,10 @@ function AssessmentBatches() {
         batch_name: form.batch_name.trim(),
         client_id: Number(form.client_id),
         estimated_users: Number(form.estimated_users),
+        containers_per_server: Number(form.containers_per_server),
       });
       setShowForm(false);
-      setForm({ batch_name: "", client_id: "", estimated_users: "" });
+      setForm({ batch_name: "", client_id: "", estimated_users: "", containers_per_server: "3" });
       fetchBatches();
     } catch (err) {
       setFormError(err.response?.data?.error || "Failed to create batch.");
@@ -292,6 +309,24 @@ function AssessmentBatches() {
                     value={form.estimated_users}
                     onChange={(e) => setForm((f) => ({ ...f, estimated_users: e.target.value }))}
                   />
+                </div>
+                <div className="col-md-2">
+                  <label className="form-label small fw-semibold">Containers / Server</label>
+                  <input
+                    type="number"
+                    className="form-control"
+                    min="1"
+                    placeholder="3"
+                    value={form.containers_per_server}
+                    onChange={(e) =>
+                      setForm((f) => ({ ...f, containers_per_server: e.target.value }))
+                    }
+                  />
+                  <div className="form-text small">
+                    {requiredServers > 0
+                      ? `${requiredServers} server${requiredServers > 1 ? "s" : ""} required for ${estimatedUsers} users.`
+                      : "Enter users and capacity to calculate required servers."}
+                  </div>
                 </div>
                 <div className="col-md-2 d-flex align-items-end">
                   <button
