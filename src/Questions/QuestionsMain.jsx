@@ -5,10 +5,11 @@ import A1L1Q02Question from "./A1L1Q2Question";
 import A1L1Q01Question from "./A1L1Q1Question";
 import { useAssessmentProtection, enterFullscreen } from '../utils/useAssessmentProtection';
 import { useTabClaim } from '../utils/useTabClaim';
+import { decodeRouteToken } from '../utils/routeToken';
 
 export default function QuestionsMain() {
     const { encrypted } = useParams();
-    const {id, session_id, aon_id, question_id, dockerPort, outputPort, test_id, test_name} = JSON.parse(atob(encrypted));
+    const {id, session_id, aon_id, question_id, dockerPort, outputPort, test_id, test_name} = decodeRouteToken(encrypted);
     const [testdata, setTestdata] = useState([]);
     const [htmlContent, setHtmlContent] = useState('');
     const [isButtonEnabled, setIsButtonEnabled] = useState(false);

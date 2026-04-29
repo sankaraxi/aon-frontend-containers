@@ -11,6 +11,7 @@ import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom"
 
 import { useTabClaim } from '../utils/useTabClaim';
+import { encodeRouteToken } from '../utils/routeToken';
 
 export default function GuidelinesPage() {
 
@@ -179,7 +180,7 @@ export default function GuidelinesPage() {
       test_name: payload?.test_name,
     }
   
-    const base64 = btoa(JSON.stringify(paramData)); 
+    const base64 = encodeRouteToken(paramData); 
 
   // Show loading spinner while resolving the token
   if (loading) {
