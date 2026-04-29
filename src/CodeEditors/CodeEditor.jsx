@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useTabClaim } from '../utils/useTabClaim';
+import { getCandidateRuntimeApiUrl } from '../utils/candidateApi';
 
 function WorkspaceLoader() {
   return (
@@ -190,7 +191,7 @@ function renderContent() {
                   setOutputLoaded(false);
                   setDevServerStatus('checking');
                   try {
-                    const res = await fetch(`${import.meta.env.VITE_BACKEND_API_URL}/check-dev-server`, {
+                    const res = await fetch(getCandidateRuntimeApiUrl('/check-dev-server'), {
                       method: 'POST',
                       headers: { 'Content-Type': 'application/json' },
                       body: JSON.stringify({ outputPort: oPort }),
@@ -256,7 +257,7 @@ function renderContent() {
                       onClick={async () => {
                         setDevServerStatus('checking');
                         try {
-                          const res = await fetch(`${import.meta.env.VITE_BACKEND_API_URL}/check-dev-server`, {
+                          const res = await fetch(getCandidateRuntimeApiUrl('/check-dev-server'), {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({ outputPort: oPort }),

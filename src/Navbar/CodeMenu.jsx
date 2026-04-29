@@ -7,6 +7,7 @@ import A1L1Q01Question from "../Questions/A1L1Q1Question";
 import A1L1Q02Question from "../Questions/A1L1Q2Question";
 import A1L1Q03Question from "../Questions/A1L1Q3Question";
 import { useAssessmentProtection } from '../utils/useAssessmentProtection';
+import { getBackendApiUrl, getCandidateRuntimeApiUrl } from '../utils/candidateApi';
 
 export default function CodeMenu() {
     const { id, question } = useParams();
@@ -53,7 +54,7 @@ export default function CodeMenu() {
 
         if (userRole === '3' || userRole === '4') {
             try {
-                const response = await fetch(`${import.meta.env.VITE_BACKEND_API_URL}/submit-final`, {
+                const response = await fetch(getCandidateRuntimeApiUrl('/submit-final'), {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -73,7 +74,7 @@ export default function CodeMenu() {
                         ? 'The candidate was auto-submitted due to repeated tab switching and the development server was not running at the time of submission.'
                         : 'The timer has expired and the candidate did not start the development server. No assessment was evaluated.';
                     console.log('Dev server not running during auto-submit, submitting without assessment...');
-                    const noAssessResponse = await fetch(`${import.meta.env.VITE_BACKEND_API_URL}/submit-no-assessment`, {
+                    const noAssessResponse = await fetch(getCandidateRuntimeApiUrl('/submit-no-assessment'), {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
@@ -96,7 +97,7 @@ export default function CodeMenu() {
         }
 
         try {
-            await fetch(`${import.meta.env.VITE_BACKEND_API_URL}/cleanup-docker-2`, {
+            await fetch(getCandidateRuntimeApiUrl('/cleanup-docker-2'), {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ userId: aonId, question: userQuestion, framework: framework }),
@@ -144,7 +145,7 @@ export default function CodeMenu() {
     useEffect(() => {
         const fetchUserLog = async () => {
             try {
-            const response = await axios.get(`${import.meta.env.VITE_BACKEND_API_URL}/time-left/${launchTokenId}`);
+            const response = await axios.get(getBackendApiUrl(`/time-left/${launchTokenId}`));
             setLogData(response.data);
 
             } catch (err) {
@@ -172,7 +173,7 @@ export default function CodeMenu() {
                     startWorkspaceTrackedRef.current = true;
                     const workspaceUrl = window.location.pathname;
 
-                    await fetch(`${import.meta.env.VITE_BACKEND_API_URL}/aon/start-workspace`, {
+                    await fetch(getBackendApiUrl('/aon/start-workspace'), {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -276,7 +277,7 @@ useEffect(() => {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 1500);
     try {
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_API_URL}/heartbeat`, {
+    const response = await fetch(getCandidateRuntimeApiUrl('/heartbeat'), {
         method: "GET",
         signal: controller.signal,
       });
@@ -406,7 +407,7 @@ useEffect(() => {
       return;
     }
     try {
-      await fetch(`${import.meta.env.VITE_BACKEND_API_URL}/start`, {
+    await fetch(getCandidateRuntimeApiUrl('/start'), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -478,7 +479,7 @@ useEffect(() => {
         if(userRole === '3' || userRole === '4'){
             // Pre-check: ensure the dev server is running before executing the test
             try {
-                const checkRes = await fetch(`${import.meta.env.VITE_BACKEND_API_URL}/check-dev-server`, {
+                const checkRes = await fetch(getCandidateRuntimeApiUrl('/check-dev-server'), {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ outputPort }),
@@ -503,7 +504,7 @@ useEffect(() => {
             setIsSubmitting(true)   
             if(userQuestion === 'a1l1q3'){
                 try {
-                    const response = await fetch(`${import.meta.env.VITE_BACKEND_API_URL}/run-Assesment`, {
+                    const response = await fetch(getCandidateRuntimeApiUrl('/run-Assesment'), {
                         method: 'POST',
                         headers: {
                         'Content-Type': 'application/json',
@@ -541,7 +542,7 @@ useEffect(() => {
                   }
             } else if(userQuestion === 'a1l1q2'){
                 try {
-                    const response = await fetch(`${import.meta.env.VITE_BACKEND_API_URL}/run-Assesment-2`, {
+                    const response = await fetch(getCandidateRuntimeApiUrl('/run-Assesment-2'), {
                         method: 'POST',
                         headers: {
                         'Content-Type': 'application/json',
@@ -580,7 +581,7 @@ useEffect(() => {
                   }
             } else if(userQuestion === 'a1l1q1'){
                 try {
-                    const response = await fetch(`${import.meta.env.VITE_BACKEND_API_URL}/run-Assesment-1`, {
+                    const response = await fetch(getCandidateRuntimeApiUrl('/run-Assesment-1'), {
                         method: 'POST',
                         headers: {
                         'Content-Type': 'application/json',
@@ -624,7 +625,7 @@ useEffect(() => {
             
         } else if (userRole === '5'){
             try {
-                const response = await fetch(`${import.meta.env.VITE_BACKEND_API_URL}/run-a10l10-Assesment`, {
+                const response = await fetch(getCandidateRuntimeApiUrl('/run-a10l10-Assesment'), {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -672,7 +673,7 @@ useEffect(() => {
         // Step 1: Submit final assessment (runs test + sends webhook from backend)
         if (userRole === '3' || userRole === '4') {
             try {
-                const response = await fetch(`${import.meta.env.VITE_BACKEND_API_URL}/submit-final`, {
+                const response = await fetch(getCandidateRuntimeApiUrl('/submit-final'), {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -711,7 +712,7 @@ useEffect(() => {
 
         // Step 2: Cleanup docker
         try {
-            await fetch(`${import.meta.env.VITE_BACKEND_API_URL}/cleanup-docker-2`, {
+            await fetch(getCandidateRuntimeApiUrl('/cleanup-docker-2'), {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ userId: aonId, question: userQuestion, framework: framework }),

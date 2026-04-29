@@ -76,6 +76,12 @@ export default function GuidelinesPage() {
         } else {
           sessionStorage.removeItem("previewUrl");
         }
+        if (data?.payload?.api_base_url) {
+          sessionStorage.setItem("containerApiBase", data.payload.api_base_url);
+        } else {
+          sessionStorage.removeItem("containerApiBase");
+        }
+        sessionStorage.setItem("containerServerNumber", data?.payload?.container_server_number || 1);
 
         sessionStorage.setItem("userRole", 4);
         sessionStorage.setItem("userId", data?.payload?.id);
@@ -310,7 +316,7 @@ export default function GuidelinesPage() {
                 const framework = 'react';
                 const dPort = String(payload?.docker_port);
                 const oPort = String(payload?.output_port);
-                fetch(`${import.meta.env.VITE_BACKEND_API_URL}/run-script`, {
+                fetch(`${sessionStorage.getItem("containerApiBase") || import.meta.env.VITE_BACKEND_API_URL}/run-script`, {
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({

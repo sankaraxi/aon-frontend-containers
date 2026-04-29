@@ -74,7 +74,7 @@ function SuperAdminDashboard() {
     );
   }
 
-  const { businesses = [], port_slots = {}, questions = [], recent_assignments = [] } =
+  const { businesses = [], port_slots = {}, questions = [], recent_assignments = [], successful_containers = [] } =
     dashboardData || {};
 
   const totalSubscriptionLimit = businesses.reduce((sum, b) => sum + (b.subscription_limit || 0), 0);
@@ -110,6 +110,12 @@ function SuperAdminDashboard() {
       value: questions.length,
       icon: faClipboardList,
       color: "#ef4444",
+    },
+    {
+      title: "Healthy Containers",
+      value: successful_containers.length,
+      icon: faServer,
+      color: "#0f766e",
     },
   ];
 
@@ -149,6 +155,56 @@ function SuperAdminDashboard() {
               </div>
             </div>
           ))}
+        </div>
+
+        <div className="card border-0 shadow-sm mb-4">
+          <div className="card-header bg-white border-bottom">
+            <h5 className="mb-0">
+              <FontAwesomeIcon icon={faServer} className="me-2 text-success" />
+              Successfully Provisioned Containers
+            </h5>
+          </div>
+          <div className="card-body p-0">
+            <div className="table-responsive">
+              <table className="table table-hover mb-0">
+                <thead className="table-light">
+                  <tr>
+                    <th>Container</th>
+                    <th>Batch</th>
+                    <th>Client</th>
+                    <th>Question</th>
+                    <th>Server</th>
+                    <th>Provisioned At</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {successful_containers.map((container) => (
+                    <tr key={container.id}>
+                      <td className="font-monospace small text-info">{container.container_identifier || `pac${container.id}`}</td>
+                      <td className="fw-semibold">{container.batch_name || `Batch ${container.batch_id}`}</td>
+                      <td>{container.client_name || "—"}</td>
+                      <td>
+                        <span className="badge bg-info text-dark">{container.question_id}</span>
+                      </td>
+                      <td>
+                        <span className="badge bg-secondary">Server {container.container_server_number || 1}</span>
+                      </td>
+                      <td className="small text-muted">
+                        {container.provisioned_at ? new Date(container.provisioned_at).toLocaleString() : "—"}
+                      </td>
+                    </tr>
+                  ))}
+                  {successful_containers.length === 0 && (
+                    <tr>
+                      <td colSpan="6" className="text-center text-muted py-4">
+                        No successfully provisioned containers yet.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
 
         {/* Businesses Overview */}

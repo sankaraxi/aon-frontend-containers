@@ -485,6 +485,7 @@ function AssessmentBatches() {
                                         <tr>
                                           <th>#</th>
                                           <th>Question</th>
+                                          <th>Server</th>
                                           <th>Docker Port</th>
                                           <th>Output Port</th>
                                           <th>Port Slot ID</th>
@@ -504,6 +505,7 @@ function AssessmentBatches() {
                                                 {c.question_id}
                                               </span>
                                             </td>
+                                            <td className="text-muted small">Server {c.container_server_number || 1}</td>
                                             <td className="font-monospace small">{c.docker_port}</td>
                                             <td className="font-monospace small">{c.output_port}</td>
                                             <td className="text-muted small">{c.port_slot_id}</td>
