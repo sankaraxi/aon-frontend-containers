@@ -171,7 +171,7 @@ function AssessmentBatches() {
   const handleDeprovision = async (batchId, batchName) => {
     if (
       !window.confirm(
-        `Deprovision ALL containers for "${batchName}"?\n\nThis will release ALL port slots (including assigned ones) and stop all Docker containers. The batch will be marked as Completed. This cannot be undone.`
+        `Deprovision ALL containers for "${batchName}"?\n\nThis will release ALL port slots (including assigned ones) and stop all Docker containers on their assigned servers. The batch will be marked as Deprovisioned. This cannot be undone.`
       )
     )
       return;
@@ -187,7 +187,7 @@ function AssessmentBatches() {
       }
       setProvisionResult((r) => ({
         ...r,
-        [batchId]: { type: "warning", msg: `⚠️ ${res.data.deprovisioned_count} containers deprovisioned — port slots released. Docker containers stopping.` },
+        [batchId]: { type: "warning", msg: `⚠️ ${res.data.deprovisioned_count} containers deprovisioned — port slots released and Docker containers stopped.` },
       }));
     } catch (err) {
       setProvisionResult((r) => ({
