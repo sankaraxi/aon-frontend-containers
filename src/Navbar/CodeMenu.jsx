@@ -512,7 +512,7 @@ useEffect(() => {
                         'Content-Type': 'application/json',
                         },
                         body: JSON.stringify({
-                            userId:aonId, framework:framework, outputPort: outputPort
+                            userId:aonId, framework:framework, outputPort: outputPort, serverNumber: Number(containerServerNumber)
                         }),
                     });
                     const data = await response.json();
@@ -550,7 +550,7 @@ useEffect(() => {
                         'Content-Type': 'application/json',
                         },
                         body: JSON.stringify({
-                            userId:aonId, framework:framework, outputPort: outputPort
+                            userId:aonId, framework:framework, outputPort: outputPort, serverNumber: Number(containerServerNumber)
                         }),
                     });
                     const data = await response.json();
@@ -589,7 +589,7 @@ useEffect(() => {
                         'Content-Type': 'application/json',
                         },
                         body: JSON.stringify({
-                            userId:aonId, framework:framework, outputPort: outputPort
+                            userId:aonId, framework:framework, outputPort: outputPort, serverNumber: Number(containerServerNumber)
                         }),
                     });
                     const data = await response.json();
