@@ -39,6 +39,7 @@ export default function CodeMenu() {
     const dockerPort = sessionStorage.getItem("dockerPort");
     
     const outputPort = sessionStorage.getItem("outputPort");
+    const containerServerNumber = sessionStorage.getItem("containerServerNumber") || "1";
     // console.log('dockerPort in CodeMenu:', outputPort);
 
     const [logData, setLogData] = useState(null);
@@ -62,6 +63,7 @@ export default function CodeMenu() {
                         framework: framework,
                         outputPort: outputPort,
                         userQuestion: userQuestion,
+                        serverNumber: Number(containerServerNumber),
                         autoSubmit: true,
                         reason: reason,
                     }),
@@ -680,7 +682,8 @@ useEffect(() => {
                         aonId: aonId,
                         framework: framework,
                         outputPort: outputPort,
-                        userQuestion: userQuestion
+                        userQuestion: userQuestion,
+                        serverNumber: Number(containerServerNumber)
                     }),
                 });
                 const data = await response.json();
