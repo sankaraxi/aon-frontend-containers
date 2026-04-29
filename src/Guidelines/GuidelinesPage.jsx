@@ -66,6 +66,16 @@ export default function GuidelinesPage() {
 
         sessionStorage.setItem("dockerPort", data?.payload?.docker_port);
         sessionStorage.setItem("outputPort", data?.payload?.output_port);
+        if (data?.payload?.editor_url) {
+          sessionStorage.setItem("editorUrl", data.payload.editor_url);
+        } else {
+          sessionStorage.removeItem("editorUrl");
+        }
+        if (data?.payload?.preview_url) {
+          sessionStorage.setItem("previewUrl", data.payload.preview_url);
+        } else {
+          sessionStorage.removeItem("previewUrl");
+        }
 
         sessionStorage.setItem("userRole", 4);
         sessionStorage.setItem("userId", data?.payload?.id);
@@ -157,6 +167,8 @@ export default function GuidelinesPage() {
       question_id: payload?.question_id,
       dockerPort: payload?.docker_port,
       outputPort: payload?.output_port,
+      editorUrl: payload?.editor_url,
+      previewUrl: payload?.preview_url,
       test_id: payload?.test_id,
       test_name: payload?.test_name,
     }

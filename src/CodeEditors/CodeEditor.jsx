@@ -45,6 +45,8 @@ export default function CodeEditor() {
     const userRole = sessionStorage.getItem("userRole");
 
     const {id , framework,dPort, oPort} = useParams();
+  const editorUrl = sessionStorage.getItem("editorUrl");
+  const previewUrl = sessionStorage.getItem("previewUrl");
 
     console.log("ID:", id);
     console.log("Framework:", framework);
@@ -138,10 +140,16 @@ export default function CodeEditor() {
 
 function renderContent() {
   const outputSrc = framework === "react"
-    ? `${import.meta.env.VITE_DOCKER_OUTPUT_PORT}${oPort}`
+    ? (previewUrl && previewUrl !== 'null' && previewUrl !== 'undefined'
+        ? previewUrl
+        : `${import.meta.env.VITE_DOCKER_OUTPUT_PORT}${oPort}`)
     : framework === "vue"
     ? 'http://13.201.235.2:5244'
     : null;
+
+  const resolvedEditorUrl = editorUrl && editorUrl !== 'null' && editorUrl !== 'undefined'
+    ? editorUrl
+    : `${import.meta.env.VITE_DOCKER_PORT}${dPort}/?folder=/home/coder/project`;
 
   return (
         <div className="relative" style={{ height: 'calc(100vh - 80px)' }}>
@@ -151,7 +159,7 @@ function renderContent() {
           {framework === "react" ? (
               <iframe
               ref={iframeRef}
-              src={`${import.meta.env.VITE_DOCKER_PORT}${dPort}/?folder=/home/coder/project`}
+              src={resolvedEditorUrl}
               width="100%"
               height="100%"
               style={{ border: "none", display: "block", visibility: editorLoaded ? "visible" : "hidden" }}
