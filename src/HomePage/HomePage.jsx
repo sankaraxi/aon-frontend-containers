@@ -10,6 +10,10 @@ const FIELD_RULES = {
     required: "Roll number is required.",
     pattern: { value: /^[a-zA-Z0-9_-]{2,30}$/, message: "Roll number must be 2\u201330 alphanumeric characters." },
   },
+  mobileNumber: {
+    required: "Mobile number is required.",
+    pattern: { value: /^[6-9]\d{9}$/, message: "Enter a valid 10-digit Indian mobile number." },
+  },
 };
 
 function validate(fields) {
@@ -26,13 +30,15 @@ function validate(fields) {
 }
 
 const HomePage = () => {
-  const [fields, setFields] = useState({ name: "", rollNumber: "" });
+  const [fields, setFields] = useState({ name: "", rollNumber: "", mobileNumber: "" });
   const [touched, setTouched] = useState({});
   const [fieldErrors, setFieldErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [apiError, setApiError] = useState(null);
   const [copied, setCopied] = useState(false);
+
+  console.log("Test Link:", result?.test_link);
 
   const handleChange = useCallback((e) => {
     const { name, value } = e.target;
@@ -54,7 +60,7 @@ const HomePage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const allTouched = { name: true, rollNumber: true };
+    const allTouched = { name: true, rollNumber: true, mobileNumber: true };
     setTouched(allTouched);
     const errs = validate(fields);
     setFieldErrors(errs);
@@ -68,7 +74,7 @@ const HomePage = () => {
     try {
       const res = await axios.post(
         `${import.meta.env.VITE_BACKEND_API_URL}/generate-test-link`,
-        { name: fields.name.trim(), rollNumber: fields.rollNumber.trim() },
+        { name: fields.name.trim(), rollNumber: fields.rollNumber.trim(), mobileNumber: fields.mobileNumber.trim() },
         { timeout: 15000 }
       );
       setResult(res.data);
@@ -93,7 +99,7 @@ const HomePage = () => {
         } else if (status === 422) {
           setApiError(serverMsg || "Invalid data submitted. Please review your inputs.");
         } else if (status >= 500) {
-          setApiError("A server error occurred. Please try again later.");
+          setApiError(serverMsg || `Server error (${status}). Please try again later.`);
         } else {
           setApiError(serverMsg || `Unexpected error (${status}). Please try again.`);
         }
@@ -112,6 +118,15 @@ const HomePage = () => {
     }
   };
 
+  const handleRegenerate = () => {
+    setResult(null);
+    setFields({ name: "", rollNumber: "", mobileNumber: "" });
+    setTouched({});
+    setFieldErrors({});
+    setApiError(null);
+    setCopied(false);
+  };
+
   return (
     <div style={styles.page}>
       <div style={styles.card}>
@@ -121,7 +136,7 @@ const HomePage = () => {
           <p style={styles.subtitle}>Enter your details to receive your personalised test link.</p>
         </div>
 
-        <form onSubmit={handleSubmit} noValidate style={styles.form}>
+        {!result && <form onSubmit={handleSubmit} noValidate style={styles.form}>
           <Field
             id="name"
             label="Full Name"
@@ -148,6 +163,19 @@ const HomePage = () => {
             autoComplete="off"
           />
 
+          <Field
+            id="mobileNumber"
+            label="Mobile Number"
+            name="mobileNumber"
+            type="tel"
+            placeholder=""
+            value={fields.mobileNumber}
+            error={fieldErrors.mobileNumber}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            autoComplete="tel"
+          />
+
           {apiError && (
             <div style={styles.errorBanner} role="alert" aria-live="assertive">
               <span style={styles.errorBannerIcon}>&#9888;</span>
@@ -169,7 +197,7 @@ const HomePage = () => {
               "Generate Test Link"
             )}
           </button>
-        </form>
+        </form>}
 
         {result && (
           <div style={styles.resultCard} role="status" aria-live="polite">
@@ -194,24 +222,33 @@ const HomePage = () => {
             )}
 
             {result.test_link ? (
-              <div style={styles.linkGroup}>
-                <a
-                  href={result.test_link}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  style={styles.startButton}
-                >
-                  Start Test &rarr;
-                </a>
+              <>
+                <div style={styles.linkGroup}>
+                  <a
+                    href={result.test_link}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    style={styles.startButton}
+                  >
+                    Start Test &rarr;
+                  </a>
+                  <button
+                    type="button"
+                    onClick={handleCopy}
+                    style={styles.copyButton}
+                    aria-label="Copy test link to clipboard"
+                  >
+                    {copied ? "Copied!" : "Copy Link"}
+                  </button>
+                </div>
                 <button
                   type="button"
-                  onClick={handleCopy}
-                  style={styles.copyButton}
-                  aria-label="Copy test link to clipboard"
+                  onClick={handleRegenerate}
+                  style={styles.regenerateButton}
                 >
-                  {copied ? "Copied!" : "Copy Link"}
+                  &#8635; Regenerate
                 </button>
-              </div>
+              </>
             ) : (
               <div style={styles.warnBanner} role="alert">
                 <span style={styles.errorBannerIcon}>&#9888;</span>
@@ -510,6 +547,20 @@ const styles = {
     fontSize: 13,
     fontWeight: 500,
     lineHeight: 1.5,
+  },
+  regenerateButton: {
+    marginTop: 14,
+    width: "100%",
+    padding: "9px 16px",
+    background: "transparent",
+    color: "#6B7280",
+    border: "1.5px solid #D1D5DB",
+    borderRadius: 7,
+    fontSize: 13,
+    fontWeight: 600,
+    cursor: "pointer",
+    letterSpacing: "0.01em",
+    transition: "border-color 0.15s, color 0.15s",
   },
 };
 

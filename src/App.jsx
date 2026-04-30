@@ -19,6 +19,7 @@ import ClientManagement from './Admin/pages/ClientManagement';
 import SuperAdminDashboard from './Admin/pages/SuperAdminDashboard';
 import BusinessManagement from './Admin/pages/BusinessManagement';
 import AssessmentBatches from './Admin/pages/AssessmentBatches';
+import BatchProgressTracker from './Admin/pages/BatchProgressTracker';
 import HomePage from './HomePage/HomePage';
 
 // import Login from './components/Login/Login';
@@ -79,6 +80,7 @@ function App() {
         <Route path="/admin/superadmin" element={<SuperAdminDashboard/>} />
         <Route path="/admin/businesses" element={<BusinessManagement/>} />
         <Route path="/admin/assessment-batches" element={<AssessmentBatches/>}/>
+        <Route path="/admin/batch-progress" element={<BatchProgressTracker/>}/>
         <Route path="/admin/create-test" element={<CreateTest/>}/>
         <Route path="/admin/view-test" element={<ViewTest/>}/>
         <Route path="/admin/clients" element={<ClientManagement/>}/>

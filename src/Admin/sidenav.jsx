@@ -2,7 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import "./sidenav.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHome, faPlusCircle, faEye, faBars, faRightFromBracket, faBuilding, faChartBar, faBriefcase, faLayerGroup } from "@fortawesome/free-solid-svg-icons";
+import { faHome, faPlusCircle, faEye, faBars, faRightFromBracket, faBuilding, faChartBar, faBriefcase, faLayerGroup, faChartLine } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 
 const sidebarVariants = {
@@ -53,6 +53,12 @@ function Sidebarcomp() {
               <Link to="/admin/assessment-batches">
                 <FontAwesomeIcon icon={faLayerGroup} className="mx-1 text-light" />
                 <motion.span variants={linkVariants}>Batches</motion.span>
+              </Link>
+            </li>
+            <li>
+              <Link to="/admin/batch-progress">
+                <FontAwesomeIcon icon={faChartLine} className="mx-1 text-light" />
+                <motion.span variants={linkVariants}>Progress</motion.span>
               </Link>
             </li>
           </>
